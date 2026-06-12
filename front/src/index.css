@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: #f4f6f0;
+  color: #1a2e1e;
+}
+
+:root {
+  --green-dark: #1a4a2e;
+  --green-mid: #2d7a4f;
+  --green-light: #3fa36b;
+  --yellow: #e8c832;
+  --red-btn: #c0392b;
+  --bg: #f4f6f0;
+  --white: #ffffff;
+  --text: #1a2e1e;
+  --muted: #5a7a62;
+  --border: #ccdbc2;
+  --radius: 12px;
+}

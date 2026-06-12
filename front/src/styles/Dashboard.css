@@ -1,0 +1,127 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg);
+}
+
+/* Navbar horizontale */
+.sidebar {
+  width: 100%;
+  background: var(--green-dark);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  height: 60px;
+}
+
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sb-logo .logo-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-logo .logo-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--green-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-logo .logo-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+
+.sb-logo .brand-name {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.sb-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-item i { font-size: 17px; }
+.nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.nav-item.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 500; }
+.nav-item.logout { color: rgba(255,100,100,0.8); }
+.nav-item.logout:hover { background: rgba(255,80,80,0.1); color: #ff8080; }
+
+.sb-footer {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.tb-title { font-size: 16px; font-weight: 600; color: var(--text); }
+
+.tb-user { display: flex; align-items: center; gap: 10px; }
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--green-mid);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.user-sub { font-size: 11px; color: var(--muted); }
+
+.content { flex: 1; padding: 20px 24px; overflow-y: auto; }

@@ -36,10 +36,12 @@ export default function AuthPage({ onSuccess, onRegister }) {
 
         {/* Header */}
         <div className="auth-header">
-          <div className="logo-circle">
-            <div className="logo-inner">
-              <div className="logo-dot" />
+          <div className="logo-flag">
+            <div className="flag-green" />
+            <div className="flag-yellow">
+              <span className="flag-star">★</span>
             </div>
+            <div className="flag-red" />
           </div>
           <div className="brand">
             <div className="brand-name">BOKKNA</div>

@@ -38,8 +38,12 @@ export default function Dashboard({ onLogout, onAdmin }) {
     <div className="dashboard">
       <div className="sidebar">
         <div className="sb-logo">
-          <div className="logo-circle">
-            <div className="logo-inner"><div className="logo-dot" /></div>
+          <div className="logo-flag">
+            <div className="flag-green" />
+            <div className="flag-yellow">
+              <span className="flag-star">★</span>
+            </div>
+            <div className="flag-red" />
           </div>
           <div className="brand-name">BOKKNA</div>
         </div>

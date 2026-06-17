@@ -125,3 +125,27 @@
 .user-sub { font-size: 11px; color: var(--muted); }
 
 .content { flex: 1; padding: 20px 24px; overflow-y: auto; }
+.logo-flag {
+  width: 42px;
+  height: 28px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.flag-green { flex: 1; background: #00853F; }
+
+.flag-yellow {
+  flex: 1;
+  background: #FDEF42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flag-star { color: #00853F; font-size: 11px; line-height: 1; }
+
+.flag-red { flex: 1; background: #E31B23; }

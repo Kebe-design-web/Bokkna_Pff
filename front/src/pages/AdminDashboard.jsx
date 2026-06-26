@@ -29,14 +29,18 @@ export default function AdminDashboard({ onLogout }) {
       {/* Sidebar */}
       <div className="admin-sidebar">
         <div className="admin-sb-logo">
-          <div className="logo-circle">
-            <div className="logo-inner"><div className="logo-dot" /></div>
-          </div>
-          <div>
-            <div className="admin-brand">Plateforme</div>
-            <div className="admin-brand-sub">de vote citoyen</div>
-          </div>
-        </div>
+  <div style={{ width: 42, height: 28, borderRadius: 4, overflow: "hidden", display: "flex", flexShrink: 0 }}>
+    <div style={{ flex: 1, background: "#00853F" }} />
+    <div style={{ flex: 1, background: "#FDEF42", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <span style={{ color: "#00853F", fontSize: 12, lineHeight: 1 }}>★</span>
+    </div>
+    <div style={{ flex: 1, background: "#E31B23" }} />
+  </div>
+  <div>
+    <div className="admin-brand">Plateforme</div>
+    <div className="admin-brand-sub">de vote citoyen</div>
+  </div>
+</div>
 
         <nav className="admin-sb-nav">
           {[

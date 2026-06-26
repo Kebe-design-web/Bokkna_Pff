@@ -1,13 +1,71 @@
 import { useState } from "react";
 import "../styles/AuthPage.css";
+import RegisterPage from "./RegisterPage";
 
 const STEPS = { CNIE: 1, OTP: 2, SUCCESS: 3 };
 
-export default function AuthPage({ onSuccess, onRegister }) {
+const TRANSLATIONS = {
+  fr: {
+    brandSub: "Plateforme de vote sécurisée",
+    stepTitle1: "Authentification",
+    stepSub1: "Entrez votre numéro de CNIE pour continuer",
+    cnieLabel: "Numéro CNIE",
+    cniePlaceholder: "12345678901234",
+    cnieError: "Numéro CNIE invalide",
+    btnOtp: "Recevoir code OTP",
+    or: "ou",
+    btnRegister: "S'inscrire",
+    langLabel: "Langue / Làkk",
+    stepTitle2: "Code OTP",
+    stepSub2: "Code reçu par SMS au numéro lié à votre CNIE",
+    otpHint: "Saisissez les 4 chiffres reçus par SMS",
+    back: "Retour",
+    resend: "Vous n'avez pas reçu le code ?",
+    resendLink: "Renvoyer",
+    btnValidate: "Valider",
+    btnCancel: "Annuler",
+    successTitle: "Authentification réussie",
+    successMsg: "Bienvenue,",
+    successInfo: "Identité vérifiée avec succès",
+    btnDashboard: "Accéder au tableau de bord",
+  },
+  wo: {
+    brandSub: "Kër bi ci vote bu yëgël",
+    stepTitle1: "Seetlu",
+    stepSub1: "Bind sa nimero CNIE ngir jëf",
+    cnieLabel: "Nimero CNIE",
+    cniePlaceholder: "12345678901234",
+    cnieError: "Nimero CNIE bi baaxul",
+    btnOtp: "Yónneel kóod OTP",
+    or: "walla",
+    btnRegister: "Bindal sa tur",
+    langLabel: "Langue / Làkk",
+    stepTitle2: "Kóod OTP",
+    stepSub2: "Kóod bi ngay dëkkal ci SMS bi",
+    otpHint: "Bindal juróom fukk ak juróom ñaar ci SMS bi",
+    back: "Dellu",
+    resend: "Kóod bi amul ?",
+    resendLink: "Yónneel ci kanam",
+    btnValidate: "Dalal",
+    btnCancel: "Anuul",
+    successTitle: "Seetlu ak ngor",
+    successMsg: "Dalal ak jamm,",
+    successInfo: "Seetlu ak ngor ci kanam",
+    btnDashboard: "Dem ci tableau de bord",
+  },
+};
+
+export default function AuthPage({ onSuccess }) {
   const [step, setStep] = useState(STEPS.CNIE);
   const [cnie, setCnie] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [error, setError] = useState(false);
+  const [lang, setLang] = useState("fr");
+  const [showRegister, setShowRegister] = useState(false);
+
+if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
+
+  const t = TRANSLATIONS[lang];
 
   const handleOtp = (val, idx) => {
     const next = [...otp];
@@ -34,71 +92,75 @@ export default function AuthPage({ onSuccess, onRegister }) {
     <div className="auth-page">
       <div className="auth-card">
 
-        {/* Header */}
         <div className="auth-header">
-          <div className="logo-flag">
-            <div className="flag-green" />
-            <div className="flag-yellow">
-              <span className="flag-star">★</span>
+          <div className="logo-circle">
+            <div className="logo-inner">
+              <div className="logo-dot" />
             </div>
-            <div className="flag-red" />
           </div>
           <div className="brand">
             <div className="brand-name">BOKKNA</div>
-            <div className="brand-sub">Plateforme de vote sécurisée</div>
+            <div className="brand-sub">{t.brandSub}</div>
           </div>
         </div>
 
         <div className="auth-body">
-          {/* Barre de progression */}
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
 
-          {/* ÉTAPE 1 : CNIE */}
           {step === STEPS.CNIE && (
             <div className="step">
-              <div className="step-title">Authentification</div>
-              <div className="step-sub">Entrez votre numéro de CNIE pour continuer</div>
-              <label htmlFor="cnie">Numéro CNIE</label>
+              <div className="step-title">{t.stepTitle1}</div>
+              <div className="step-sub">{t.stepSub1}</div>
+              <label htmlFor="cnie">{t.cnieLabel}</label>
               <input
                 id="cnie"
                 type="text"
-                placeholder="12345678901234"
+                placeholder={t.cniePlaceholder}
                 maxLength={14}
                 value={cnie}
                 onChange={(e) => setCnie(e.target.value)}
                 className={error ? "input-error" : ""}
               />
-              {error && <div className="error-msg">Numéro CNIE invalide</div>}
+              {error && <div className="error-msg">{t.cnieError}</div>}
               <button className="btn-primary" onClick={handleCnieSubmit}>
-                Recevoir code OTP
+                {t.btnOtp}
               </button>
               <div className="divider">
                 <div className="divider-line" />
-                <span className="divider-text">ou</span>
+                <span className="divider-text">{t.or}</span>
                 <div className="divider-line" />
               </div>
-              <button className="btn-outline" onClick={onRegister}>S'inscrire</button>
+              <button className="btn-outline" onClick={() => setShowRegister(true)}>{t.btnRegister}</button>
               <div className="lang-section">
-                <div className="lang-label">Langue / Làkk</div>
+                <div className="lang-label">{t.langLabel}</div>
                 <div className="lang-row">
-                  <button className="lang-btn">Français</button>
-                  <button className="lang-btn">Wolof</button>
+                  <button
+                    className={`lang-btn ${lang === "fr" ? "lang-active" : ""}`}
+                    onClick={() => setLang("fr")}
+                  >
+                    Français
+                  </button>
+                  <button
+                    className={`lang-btn ${lang === "wo" ? "lang-active" : ""}`}
+                    onClick={() => setLang("wo")}
+                  >
+                    Wolof
+                  </button>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ÉTAPE 2 : OTP */}
           {step === STEPS.OTP && (
             <div className="step">
               <button className="back-btn" onClick={() => setStep(STEPS.CNIE)}>
-                <i className="ti ti-arrow-left" /> Retour
+                <i className="ti ti-arrow-left" /> {t.back}
               </button>
-              <div className="step-title">Code OTP</div>
-              <div className="step-sub">Code reçu par SMS au numéro lié à votre CNIE</div>
-              <div className="otp-hint">Saisissez les 4 chiffres reçus par SMS</div>
+              <div className="step-title">{t.stepTitle2}</div>
+              <div className="step-sub">{t.stepSub2}</div>
+              <div className="otp-hint">{t.otpHint}</div>
               <div className="otp-row">
                 {otp.map((val, idx) => (
                   <input
@@ -113,33 +175,32 @@ export default function AuthPage({ onSuccess, onRegister }) {
                 ))}
               </div>
               <div className="resend-text">
-                Vous n'avez pas reçu le code ?{" "}
-                <span className="resend-link">Renvoyer</span>
+                {t.resend}{" "}
+                <span className="resend-link">{t.resendLink}</span>
               </div>
               <button className="btn-primary" onClick={handleOtpSubmit}>
-                Valider
+                {t.btnValidate}
               </button>
               <button className="btn-red" onClick={() => setStep(STEPS.CNIE)}>
-                Annuler
+                {t.btnCancel}
               </button>
             </div>
           )}
 
-          {/* ÉTAPE 3 : SUCCÈS */}
           {step === STEPS.SUCCESS && (
             <div className="step">
               <div className="success-icon">✅</div>
               <div className="step-title" style={{ textAlign: "center" }}>
-                Authentification réussie
+                {t.successTitle}
               </div>
               <div className="success-msg">
-                Bienvenue, <strong>Amadou M.</strong>
+                {t.successMsg} <strong>Amadou M.</strong>
               </div>
               <div className="success-info">
-                <i className="ti ti-shield-check" /> Identité vérifiée avec succès
+                <i className="ti ti-shield-check" /> {t.successInfo}
               </div>
               <button className="btn-primary" onClick={onSuccess}>
-                Accéder au tableau de bord
+                {t.btnDashboard}
               </button>
             </div>
           )}

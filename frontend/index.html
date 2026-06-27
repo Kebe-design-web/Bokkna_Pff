@@ -743,3 +743,122 @@ addLog('ok','fraud_detector · voter_verifier · election_analyzer actifs');
 </script>
 </body>
 </html>
+<style>
+.chat-btn{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:var(--green);border-radius:50%;border:none;cursor:pointer;font-size:26px;z-index:400;box-shadow:0 4px 20px rgba(0,133,63,0.4);display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.chat-btn:hover{transform:scale(1.1);background:#006830;}
+.chat-box{position:fixed;bottom:90px;right:24px;width:320px;height:420px;background:white;border-radius:16px;border:1px solid #e5e5e5;z-index:400;display:none;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.15);}
+.chat-box.open{display:flex;}
+.chat-head{background:linear-gradient(135deg,#00853F,#004d24);padding:14px 16px;border-radius:16px 16px 0 0;display:flex;align-items:center;gap:10px;}
+.chat-head .dot{width:8px;height:8px;border-radius:50%;background:#5de89a;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.chat-head h4{color:white;font-size:14px;font-weight:700;flex:1;}
+.chat-head span{color:rgba(255,255,255,0.6);font-size:11px;}
+.chat-close{color:white;background:none;border:none;cursor:pointer;font-size:18px;}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{max-width:80%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.5;}
+.chat-msg.bot{background:#f0faf4;color:#1a1a1a;border-radius:4px 12px 12px 12px;align-self:flex-start;}
+.chat-msg.user{background:var(--green);color:white;border-radius:12px 4px 12px 12px;align-self:flex-end;}
+.chat-typing{display:none;align-self:flex-start;background:#f0faf4;padding:9px 14px;border-radius:4px 12px 12px 12px;font-size:12px;color:#555;}
+.chat-typing.show{display:block;}
+.chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid #eee;}
+.chat-input input{flex:1;padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:12px;outline:none;}
+.chat-input input:focus{border-color:var(--green);}
+.chat-send{background:var(--green);color:white;border:none;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:14px;}
+.chat-suggestions{display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 10px;}
+.sug{background:#e8f5ee;color:var(--green);border:1px solid #b3ddc3;padding:4px 10px;border-radius:12px;font-size:10px;cursor:pointer;font-weight:600;}
+.sug:hover{background:var(--green);color:white;}
+</style>
+<button class="chat-btn" onclick="toggleChat()" title="Assistant IA Bokkna">🤖</button>
+<div class="chat-box" id="chatBox">
+  <div class="chat-head">
+    <div class="dot"></div>
+    <h4>🦁 Assistant Bokkna IA</h4>
+    <span>En ligne</span>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="chat-msg bot">👋 Bonjour ! Je suis l'assistant IA de Bokkna. Je peux vous aider avec le vote, la vérification d'identité, les résultats et la détection de fraude. Comment puis-je vous aider ?</div>
+  </div>
+  <div class="chat-suggestions" id="chatSugs">
+    <span class="sug" onclick="sendSug('Comment voter ?')">Comment voter ?</span>
+    <span class="sug" onclick="sendSug('Résultats actuels')">Résultats</span>
+    <span class="sug" onclick="sendSug('Vérifier mon éligibilité')">Mon éligibilité</span>
+    <span class="sug" onclick="sendSug('Fraude détectée ?')">Fraude ?</span>
+    <span class="sug" onclick="sendSug('Participation actuelle')">Participation</span>
+  </div>
+  <div class="chat-typing" id="chatTyping">🤖 Assistant IA en train d'analyser...</div>
+  <div class="chat-input">
+    <input type="text" id="chatIn" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+<script>
+const CHAT_RESPONSES = {
+  'comment voter':['Pour voter sur Bokkna :\n1️⃣ Créez votre compte avec votre CIN\n2️⃣ Recevez votre code OTP par SMS\n3️⃣ Choisissez votre candidat\n4️⃣ Votre vote est chiffré RSA-2048\n\nTout est sécurisé et anonyme ! 🔒'],
+  'voter':['Pour voter, cliquez sur 🗳️ Voter dans le menu. Il faut être connecté avec votre CIN et valider votre code OTP SMS.'],
+  'résultat':['📊 Résultats actuels :\n🟢 Amadou Diallo : 46,8% (2 115 847 voix)\n🔴 Fatou Sarr : 35,0% (1 580 234 voix)\n🟡 Ibrahima Fall : 18,2% (825 919 voix)\n\nMise à jour en temps réel !'],
+  'résultats':['📊 Résultats actuels :\n🟢 Amadou Diallo : 46,8%\n🔴 Fatou Sarr : 35,0%\n🟡 Ibrahima Fall : 18,2%'],
+  'participation':['📈 Taux de participation actuel : 61,5%\n\n14 régions couvertes :\n🥇 Kaolack : 74%\n🥈 Thiès : 71%\n🥉 Saint-Louis : 68%\n\nL\'IA election_analyzer.py prédit un taux final de 63%.'],
+  'éligibilité':['Pour être éligible au vote Bokkna :\n✅ Avoir au moins 18 ans\n✅ Posséder une CIN sénégalaise valide\n✅ Être inscrit sur la liste électorale\n\nNotre module voter_verifier.py vérifie automatiquement ces conditions !'],
+  'fraude':['🛡️ Système anti-fraude Bokkna :\n\nNotre module fraud_detector.py détecte :\n🔴 Votes multiples depuis la même IP\n🔴 Attaques brute force\n🔴 Comportements suspects\n\nScore de risque calculé en temps réel. 3 alertes détectées jusqu\'ici.'],
+  'sécurité':['🔒 Sécurité Bokkna :\n\n• Chiffrement RSA-2048 end-to-end\n• Authentification OTP SMS (Twilio)\n• Anonymat garanti via token\n• Base PostgreSQL sécurisée\n• IA anti-fraude en temps réel\n• Journal d\'audit complet'],
+  'otp':['Le code OTP est un code à 6 chiffres envoyé par SMS sur votre téléphone via Twilio. Il est valable 5 minutes. Il sert à vérifier votre identité avant de voter. Si vous ne le recevez pas, cliquez sur "Renvoyer le code".'],
+  'diaspora':['🌍 Vote diaspora :\nLes Sénégalais de l\'étranger peuvent voter depuis n\'importe où dans le monde. 10,7% des votes proviennent de la diaspora. Sélectionnez "Diaspora" comme région lors de l\'inscription.'],
+  'ia':['🤖 Modules IA Bokkna :\n\n1. fraud_detector.py\n→ Détection fraude temps réel\n\n2. voter_verifier.py\n→ Vérification éligibilité et OTP\n\n3. election_analyzer.py\n→ Statistiques et prédictions\n\nDéveloppés par Fatima Kebe — ISEP Diamniadio'],
+  'cin':['La CIN (Carte d\'Identité Nationale) est votre identifiant unique pour voter. Exemples valides :\n• SN1234567890123 (Fatima Kebe)\n• TK9773345283 (Modou Goudiaby)\n• KH2228558934 (Ibrahima Kane)'],
+  'bokkna':['🇸🇳 Bokkna signifie "participer" en wolof.\n\nC\'est la plateforme officielle de vote électronique du Sénégal développée par des étudiants de l\'ISEP Diamniadio :\n\n👩‍💻 Fatima Kebe — Base de données & IA\n👨‍💻 Dietew Ndour — Backend\n👩‍💻 Bousso Niang — Frontend'],
+  'electeur':['📋 Liste électorale Bokkna :\n10 003 électeurs inscrits\n14 régions du Sénégal\n\nVous pouvez consulter la liste complète dans l\'onglet 📋 Liste (10 003) et rechercher par nom, prénom ou région.'],
+  'aide':['Je peux vous aider avec :\n\n🗳️ Comment voter\n📊 Résultats en direct\n🛡️ Détection de fraude\n👤 Vérification éligibilité\n🔒 Sécurité et chiffrement\n🌍 Vote diaspora\n🤖 Modules IA\n\nQue voulez-vous savoir ?'],
+};
+
+function toggleChat(){
+  document.getElementById('chatBox').classList.toggle('open');
+}
+
+function sendSug(txt){
+  document.getElementById('chatIn').value=txt;
+  sendChat();
+}
+
+function sendChat(){
+  const input=document.getElementById('chatIn');
+  const txt=input.value.trim();
+  if(!txt)return;
+  input.value='';
+  addChatMsg(txt,'user');
+  document.getElementById('chatSugs').style.display='none';
+  const typing=document.getElementById('chatTyping');
+  typing.classList.add('show');
+  const msgs=document.getElementById('chatMsgs');
+  msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    typing.classList.remove('show');
+    const reply=getBotReply(txt.toLowerCase());
+    addChatMsg(reply,'bot');
+    msgs.scrollTop=msgs.scrollHeight;
+  },1200);
+}
+
+function addChatMsg(txt,type){
+  const msgs=document.getElementById('chatMsgs');
+  const div=document.createElement('div');
+  div.className='chat-msg '+type;
+  div.style.whiteSpace='pre-line';
+  div.textContent=txt;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function getBotReply(txt){
+  for(const key in CHAT_RESPONSES){
+    if(txt.includes(key))return CHAT_RESPONSES[key][0];
+  }
+  if(txt.includes('bonjour')||txt.includes('salut')||txt.includes('hello'))
+    return '👋 Bonjour ! Je suis l\'assistant IA de Bokkna. Comment puis-je vous aider aujourd\'hui ?';
+  if(txt.includes('merci'))
+    return '🙏 De rien ! N\'hésitez pas si vous avez d\'autres questions. Bonne participation !';
+  if(txt.includes('candidat'))
+    return '🗳️ 3 candidats pour l\'Élection Présidentielle 2024 :\n🟢 Amadou Diallo\n🔴 Fatou Sarr\n🟡 Ibrahima Fall';
+  return '🤔 Je n\'ai pas compris votre question. Essayez de demander :\n• "Comment voter ?"\n• "Résultats actuels"\n• "Mon éligibilité"\n• "Sécurité"\n• "Modules IA"\n\nOu tapez "aide" pour voir tout ce que je peux faire !';
+}
+</script>

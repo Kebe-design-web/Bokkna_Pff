@@ -862,3 +862,305 @@ function getBotReply(txt){
   return '🤔 Je n\'ai pas compris votre question. Essayez de demander :\n• "Comment voter ?"\n• "Résultats actuels"\n• "Mon éligibilité"\n• "Sécurité"\n• "Modules IA"\n\nOu tapez "aide" pour voir tout ce que je peux faire !';
 }
 </script>
+<script>
+// ─── MODÈLE IA BOKKNA ENRICHI ───
+const MODELE_IA = {
+  intentions: [
+    {
+      tags: ['résultat','résultats','score','gagnant','qui gagne','qui est en tête','dépouillement'],
+      reponse: () => `📊 **Résultats en direct — Élection Présidentielle 2024**\n
+🥇 Amadou Diallo — Alliance pour le Renouveau
+   ████████████░░░ 46,8% — 2 115 847 voix ✅ EN TÊTE
+
+🥈 Fatou Sarr — Parti Démocratique Sénégalais
+   ████████░░░░░░░ 35,0% — 1 580 234 voix
+
+🥉 Ibrahima Fall — Mouvement Populaire
+   ████░░░░░░░░░░░ 18,2% — 825 919 voix
+
+📈 Taux de participation : 61,5%
+🏛️ Bureaux dépouillés : 98,2%
+📍 Région la plus active : Kaolack (74%)\n
+💡 Conseil : Les résultats sont mis à jour en temps réel par notre module election_analyzer.py`
+    },
+    {
+      tags: ['comment voter','voter','vote','étapes vote','procédure','je veux voter'],
+      reponse: () => `🗳️ **Comment voter sur Bokkna ?**\n
+Voici les 4 étapes simples :\n
+1️⃣ **S'inscrire**
+   → Cliquez sur "S'inscrire" en haut
+   → Remplissez : prénom, nom, CIN, date naissance, téléphone, région, mot de passe\n
+2️⃣ **Vérifier votre identité (OTP)**
+   → Un code à 6 chiffres est envoyé par SMS
+   → Entrez le code dans les cases
+   → Le module voter_verifier.py valide votre identité\n
+3️⃣ **Choisir votre candidat**
+   → Cliquez sur votre candidat préféré
+   → Vérifiez votre choix dans la fenêtre de confirmation\n
+4️⃣ **Confirmer**
+   → Votre vote est chiffré RSA-2048
+   → Anonymat garanti via token
+   → PostgreSQL enregistre votre vote sécurisé\n
+💡 Conseil : Votez depuis un réseau WiFi sécurisé pour protéger votre vie privée.`
+    },
+    {
+      tags: ['conseil','astuce','recommandation','aide voter','comment bien','erreur'],
+      reponse: () => `💡 **Conseils pour bien voter sur Bokkna**\n
+✅ **Avant de voter :**
+- Préparez votre CIN (numéro exact)
+- Assurez-vous d'avoir accès à votre téléphone pour l'OTP
+- Votez depuis un appareil personnel (pas public)\n
+✅ **Pendant le vote :**
+- Lisez bien les programmes des candidats avant de choisir
+- Ne partagez jamais votre code OTP avec personne
+- Une fois confirmé, le vote est irréversible\n
+✅ **Sécurité :**
+- Déconnectez-vous après avoir voté
+- Ne votez qu'une seule fois (le double vote est détecté par l'IA)
+- Signalez toute anomalie à l'administrateur\n
+✅ **Si vous avez un problème :**
+- Code OTP expiré ? → Cliquez "Renvoyer le code"
+- CIN invalide ? → Vérifiez votre carte d'identité
+- Déjà voté ? → Consultez les résultats en direct`
+    },
+    {
+      tags: ['candidat','candidats','qui sont','programme','liste candidats'],
+      reponse: () => `🗳️ **Candidats — Élection Présidentielle 2024**\n
+🟢 **Amadou Diallo**
+   Parti : Alliance pour le Renouveau du Sénégal
+   Score actuel : 46,8% — EN TÊTE 🏆\n
+🔴 **Fatou Sarr**
+   Parti : Parti Démocratique Sénégalais
+   Score actuel : 35,0%\n
+🟡 **Ibrahima Fall**
+   Parti : Mouvement Populaire et Social
+   Score actuel : 18,2%\n
+💡 Conseil : Renseignez-vous sur les programmes de chaque candidat avant de voter. Votre voix compte !`
+    },
+    {
+      tags: ['participation','taux','région','régions','statistiques','stats'],
+      reponse: () => `📈 **Statistiques de participation**\n
+Taux national : **61,5%** sur 10 003 électeurs inscrits\n
+🏆 Top 5 des régions les plus actives :
+1. Kaolack    : 74% (765 électeurs)
+2. Thiès      : 71% (741 électeurs)
+3. Saint-Louis: 68% (739 électeurs)
+4. Kaffrine   : 66% (737 électeurs)
+5. Tambacounda: 63% (735 électeurs)\n
+🌍 Répartition :
+- Sénégal local : 89,3%
+- Diaspora      : 10,7%
+- Hommes        : 50,9%
+- Femmes        : 49,1%\n
+💡 Analyse par election_analyzer.py — Prédiction finale : 63%`
+    },
+    {
+      tags: ['fraude','frauder','tricher','sécurité','protection','suspect','bloquer'],
+      reponse: () => `🛡️ **Système anti-fraude Bokkna**\n
+Notre module **fraud_detector.py** surveille en temps réel :\n
+🔴 **Votes multiples** : Détecte si une même IP essaie de voter plusieurs fois (max 3 tentatives)\n
+🔴 **Brute force** : Bloque les comptes après 5 tentatives échouées\n
+🔴 **Comportements suspects** : Score de risque calculé de 0 à 100 pour chaque vote\n
+📊 **Statistiques actuelles :**
+- Votes validés : 4 521
+- Alertes détectées : 3
+- Comptes bloqués : 1
+- Fraudes bloquées : 0 vote frauduleux n'a passé\n
+💡 Conseil : Si vous suspectez une fraude, contactez immédiatement l'administrateur. Toutes les actions sont enregistrées dans le journal d'audit.`
+    },
+    {
+      tags: ['éligible','éligibilité','puis-je voter','droit de vote','conditions','âge','age'],
+      reponse: () => `👤 **Conditions d'éligibilité au vote**\n
+Pour voter sur Bokkna, vous devez :\n
+✅ Avoir **au moins 18 ans**
+✅ Posséder une **CIN sénégalaise valide**
+✅ Être **inscrit** sur la liste électorale
+✅ **Ne pas avoir déjà voté** pour ce scrutin\n
+🤖 Notre module **voter_verifier.py** vérifie automatiquement :\n
+- Votre âge à partir de la date de naissance
+- La validité de votre CIN
+- Votre statut d'inscription
+- L'absence de double vote\n
+💡 Conseil : Si vous êtes de la diaspora, sélectionnez "Diaspora" comme région lors de l'inscription.`
+    },
+    {
+      tags: ['otp','code sms','code','6 chiffres','sms','twilio','reçu'],
+      reponse: () => `📱 **Code OTP — Comment ça marche ?**\n
+L'OTP (One-Time Password) est un code à **6 chiffres** envoyé par SMS via Twilio.\n
+📋 **Étapes :**
+1. Entrez votre CIN et mot de passe
+2. Le système génère automatiquement un code
+3. Le code est envoyé sur votre téléphone
+4. Entrez le code dans les 6 cases (valable 5 minutes)
+5. voter_verifier.py valide votre identité\n
+❓ **Problèmes courants :**
+- Code expiré → Cliquez "🔄 Renvoyer le code"
+- Mauvais code → Vérifiez et réessayez (max 5 tentatives)
+- Pas reçu → Vérifiez votre numéro de téléphone\n
+💡 Conseil : Ne communiquez JAMAIS votre code OTP à quelqu'un d'autre.`
+    },
+    {
+      tags: ['ia','intelligence artificielle','modules','python','fraud','verifier','analyzer'],
+      reponse: () => `🤖 **Modules IA de Bokkna**\n
+Développés par **Fatima Kebe** — ISEP Diamniadio\n
+**1. fraud_detector.py** 🛡️
+→ Détecte les votes multiples et brute force
+→ Calcule un score de risque 0-100
+→ Bloque automatiquement les comptes suspects\n
+**2. voter_verifier.py** 👤
+→ Vérifie l'éligibilité (âge, CIN)
+→ Valide le code OTP SMS
+→ Empêche le double vote\n
+**3. election_analyzer.py** 📈
+→ Calcule les statistiques par candidat
+→ Analyse par région et diaspora
+→ Prédit le taux de participation final\n
+💡 Ces modules tournent en Python avec PostgreSQL 16 comme base de données.`
+    },
+    {
+      tags: ['bokkna','signifie','wolof','projet','isep','présentation'],
+      reponse: () => `🇸🇳 **Projet Bokkna**\n
+"Bokkna" signifie **"participer"** en wolof.\n
+C'est la plateforme officielle de vote électronique du Sénégal développée à l'ISEP Diamniadio.\n
+**👥 Équipe :**
+👩‍💻 Fatima Kebe — Base de données & IA
+👨‍💻 Dietew Ndour — Backend
+👩‍💻 Bousso Niang — Frontend
+👨‍🏫 M. Ahmedou Bamba Lo — Encadrant\n
+**🛠️ Technologies :**
+- PostgreSQL 16 — 10 tables — 10 003 électeurs
+- Python IA — 3 modules anti-fraude
+- Chiffrement RSA-2048
+- OTP SMS via Twilio\n
+**🎯 Objectif :** Rendre le vote accessible à tous les Sénégalais, y compris la diaspora.`
+    },
+  ],
+  defaut: `🤔 Je n'ai pas compris votre question.\n\nVoici ce que je sais faire :\n
+📊 "Résultats" → Résultats en direct
+🗳️ "Comment voter" → Guide de vote
+💡 "Conseils" → Conseils pour bien voter
+👤 "Éligibilité" → Conditions d'éligibilité
+📱 "Code OTP" → Aide sur le code SMS
+🛡️ "Fraude" → Système anti-fraude
+📈 "Participation" → Statistiques
+🤖 "Modules IA" → Les 3 modules Python
+🇸🇳 "Bokkna" → Présentation du projet\n
+Posez votre question en français ! 😊`
+};
+
+// ─── CHATBOT ───
+let chatOpen = false;
+
+function toggleChat(){
+  chatOpen = !chatOpen;
+  const box = document.getElementById('chatBox2');
+  if(chatOpen){box.classList.add('open');document.getElementById('chatIn2').focus();}
+  else box.classList.remove('open');
+}
+
+function sendSug2(txt){
+  document.getElementById('chatIn2').value = txt;
+  sendChat2();
+}
+
+function sendChat2(){
+  const input = document.getElementById('chatIn2');
+  const txt = input.value.trim();
+  if(!txt) return;
+  input.value = '';
+  addMsg2(txt, 'user');
+  document.getElementById('chatTyping2').classList.add('show');
+  const msgs = document.getElementById('chatMsgs2');
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(()=>{
+    document.getElementById('chatTyping2').classList.remove('show');
+    const reply = getReply(txt.toLowerCase());
+    addMsg2(reply, 'bot');
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1000 + Math.random()*800);
+}
+
+function addMsg2(txt, type){
+  const msgs = document.getElementById('chatMsgs2');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + type;
+  div.style.whiteSpace = 'pre-line';
+  div.textContent = txt;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function getReply(txt){
+  if(txt.includes('bonjour')||txt.includes('salut')||txt.includes('hello')||txt.includes('bonsoir'))
+    return '👋 Bonjour ! Je suis l\'assistant IA de Bokkna 🦁\nComment puis-je vous aider aujourd\'hui ?\n\nTapez "aide" pour voir toutes mes fonctionnalités.';
+  if(txt.includes('merci')||txt.includes('super')||txt.includes('parfait')||txt.includes('bravo'))
+    return '🙏 Avec plaisir ! N\'hésitez pas si vous avez d\'autres questions.\n\n🗳️ N\'oubliez pas de voter !';
+  if(txt.includes('aide')||txt.includes('menu')||txt.includes('help'))
+    return '📋 **Ce que je sais faire :**\n\n📊 "résultats" → Résultats élection\n🗳️ "comment voter" → Guide complet\n💡 "conseils" → Conseils de vote\n👤 "éligibilité" → Conditions\n📱 "otp" → Aide code SMS\n🛡️ "fraude" → Sécurité\n📈 "participation" → Statistiques\n🤖 "modules ia" → Python IA\n🇸🇳 "bokkna" → Présentation projet';
+  for(const intent of MODELE_IA.intentions){
+    for(const tag of intent.tags){
+      if(txt.includes(tag)) return intent.reponse();
+    }
+  }
+  return MODELE_IA.defaut;
+}
+</script>
+
+<style>
+.chat-btn2{position:fixed;bottom:24px;right:24px;width:58px;height:58px;background:linear-gradient(135deg,#00853F,#004d24);border-radius:50%;border:2px solid var(--yellow);cursor:pointer;font-size:26px;z-index:500;box-shadow:0 4px 20px rgba(0,133,63,0.5);display:flex;align-items:center;justify-content:center;transition:all 0.3s;}
+.chat-btn2:hover{transform:scale(1.12);}
+.chat-box2{position:fixed;bottom:94px;right:24px;width:330px;height:480px;background:white;border-radius:16px;border:1px solid #e5e5e5;z-index:500;display:none;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,0.15);}
+.chat-box2.open{display:flex;}
+.chat-head2{background:linear-gradient(135deg,#00853F,#004d24);padding:14px 16px;border-radius:16px 16px 0 0;display:flex;align-items:center;gap:8px;}
+.chat-head2 .cdot{width:8px;height:8px;border-radius:50%;background:#5de89a;animation:blink 1.5s infinite;}
+.chat-head2 h4{color:white;font-size:13px;font-weight:700;flex:1;}
+.chat-head2 small{color:rgba(255,255,255,0.6);font-size:10px;}
+.chat-close2{color:white;background:none;border:none;cursor:pointer;font-size:16px;}
+.chat-msgs2{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.chat-msg{max-width:82%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.6;}
+.chat-msg.bot{background:#f0faf4;color:#1a1a1a;border-radius:4px 12px 12px 12px;align-self:flex-start;}
+.chat-msg.user{background:var(--green);color:white;border-radius:12px 4px 12px 12px;align-self:flex-end;}
+.chat-typing2{display:none;align-self:flex-start;background:#f0faf4;padding:8px 14px;border-radius:4px 12px 12px 12px;font-size:11px;color:#555;}
+.chat-typing2.show{display:block;}
+.chat-sugs2{display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 8px;}
+.sug2{background:#e8f5ee;color:var(--green);border:1px solid #b3ddc3;padding:3px 9px;border-radius:12px;font-size:10px;cursor:pointer;font-weight:600;}
+.sug2:hover{background:var(--green);color:white;}
+.chat-inp2{display:flex;gap:7px;padding:10px 12px;border-top:1px solid #eee;}
+.chat-inp2 input{flex:1;padding:8px 11px;border:1.5px solid #ddd;border-radius:8px;font-size:12px;outline:none;}
+.chat-inp2 input:focus{border-color:var(--green);}
+.chat-inp2 button{background:var(--green);color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;}
+</style>
+
+<button class="chat-btn2" onclick="toggleChat()" title="Assistant IA Bokkna">🤖</button>
+<div class="chat-box2" id="chatBox2">
+  <div class="chat-head2">
+    <div class="cdot"></div>
+    <h4>🦁 Assistant Bokkna IA</h4>
+    <small>En ligne</small>
+    <button class="chat-close2" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs2" id="chatMsgs2">
+    <div class="chat-msg bot" style="white-space:pre-line;">👋 Bonjour ! Je suis l'assistant IA de Bokkna 🇸🇳
+
+Je peux vous aider avec :
+📊 Les résultats de l'élection
+🗳️ Comment voter étape par étape
+💡 Des conseils pour bien voter
+🛡️ La sécurité et l'anti-fraude
+
+Tapez votre question ou choisissez ci-dessous !</div>
+  </div>
+  <div class="chat-sugs2">
+    <span class="sug2" onclick="sendSug2('Résultats élection')">📊 Résultats</span>
+    <span class="sug2" onclick="sendSug2('Comment voter')">🗳️ Comment voter</span>
+    <span class="sug2" onclick="sendSug2('Conseils vote')">💡 Conseils</span>
+    <span class="sug2" onclick="sendSug2('Fraude sécurité')">🛡️ Sécurité</span>
+    <span class="sug2" onclick="sendSug2('Participation statistiques')">📈 Stats</span>
+    <span class="sug2" onclick="sendSug2('Modules IA')">🤖 IA</span>
+  </div>
+  <div class="chat-typing2" id="chatTyping2">🤖 Analyse en cours...</div>
+  <div class="chat-inp2">
+    <input type="text" id="chatIn2" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendChat2()"/>
+    <button onclick="sendChat2()">➤</button>
+  </div>
+</div>

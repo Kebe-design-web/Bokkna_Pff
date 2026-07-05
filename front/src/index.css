@@ -1,4 +1,6 @@
-* {
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -11,20 +13,51 @@ html, body, #root {
 
 body {
   font-family: 'Outfit', sans-serif;
-  background: #f4f6f0;
-  color: #1a2e1e;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
 :root {
-  --green-dark: #1a4a2e;
-  --green-mid: #2d7a4f;
-  --green-light: #3fa36b;
-  --yellow: #e8c832;
-  --red-btn: #c0392b;
-  --bg: #f4f6f0;
-  --white: #ffffff;
-  --text: #1a2e1e;
-  --muted: #5a7a62;
-  --border: #ccdbc2;
-  --radius: 12px;
+  --green-dark:   #0D3B2A;
+  --green-mid:    #00853F;
+  --green-light:  #2EA86A;
+  --green-pale:   #E6F4EE;
+  --yellow:       #FDEF42;
+  --yellow-dark:  #C8B800;
+  --red:          #E31B23;
+  --red-pale:     #FEE8E9;
+
+  --bg:           #F2F5F3;
+  --white:        #FFFFFF;
+  --surface:      #FFFFFF;
+  --surface-alt:  #F8FAF9;
+
+  --text:         #0D1F17;
+  --text-soft:    #3A5246;
+  --muted:        #6E8C7E;
+  --muted-light:  #A8C0B5;
+
+  --border:       #D6E6DC;
+  --border-mid:   #B8D4C4;
+
+  --focus-ring:   rgba(0, 133, 63, 0.18);
+  --shadow-sm:    0 1px 3px rgba(13, 59, 42, 0.08);
+  --shadow-md:    0 4px 12px rgba(13, 59, 42, 0.10);
+  --shadow-lg:    0 8px 24px rgba(13, 59, 42, 0.12);
+
+  --radius:       10px;
+  --radius-lg:    14px;
+  --radius-xl:    18px;
+}
+
+button { cursor: pointer; font-family: 'Outfit', sans-serif; }
+a { text-decoration: none; color: inherit; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+
+@media (max-width: 600px) {
+  :root { --radius: 8px; --radius-lg: 12px; }
 }

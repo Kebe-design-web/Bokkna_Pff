@@ -63,7 +63,7 @@ export default function AuthPage({ onSuccess }) {
   const [lang, setLang] = useState("fr");
   const [showRegister, setShowRegister] = useState(false);
 
-if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
+  if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
 
   const t = TRANSLATIONS[lang];
 
@@ -92,11 +92,14 @@ if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
     <div className="auth-page">
       <div className="auth-card">
 
+        {/* ── HEADER AVEC DRAPEAU ── */}
         <div className="auth-header">
-          <div className="logo-circle">
-            <div className="logo-inner">
-              <div className="logo-dot" />
+          <div className="logo-flag">
+            <div className="flag-green" />
+            <div className="flag-yellow">
+              <span className="flag-star">★</span>
             </div>
+            <div className="flag-red" />
           </div>
           <div className="brand">
             <div className="brand-name">BOKKNA</div>
@@ -109,6 +112,7 @@ if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
 
+          {/* ── ÉTAPE 1 : CNIE ── */}
           {step === STEPS.CNIE && (
             <div className="step">
               <div className="step-title">{t.stepTitle1}</div>
@@ -132,7 +136,9 @@ if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
                 <span className="divider-text">{t.or}</span>
                 <div className="divider-line" />
               </div>
-              <button className="btn-outline" onClick={() => setShowRegister(true)}>{t.btnRegister}</button>
+              <button className="btn-outline" onClick={() => setShowRegister(true)}>
+                {t.btnRegister}
+              </button>
               <div className="lang-section">
                 <div className="lang-label">{t.langLabel}</div>
                 <div className="lang-row">
@@ -153,10 +159,11 @@ if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
             </div>
           )}
 
+          {/* ── ÉTAPE 2 : OTP ── */}
           {step === STEPS.OTP && (
             <div className="step">
               <button className="back-btn" onClick={() => setStep(STEPS.CNIE)}>
-                <i className="ti ti-arrow-left" /> {t.back}
+                ← {t.back}
               </button>
               <div className="step-title">{t.stepTitle2}</div>
               <div className="step-sub">{t.stepSub2}</div>
@@ -187,6 +194,7 @@ if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
             </div>
           )}
 
+          {/* ── ÉTAPE 3 : SUCCÈS ── */}
           {step === STEPS.SUCCESS && (
             <div className="step">
               <div className="success-icon">✅</div>
@@ -197,7 +205,7 @@ if (showRegister) return <RegisterPage onBack={() => setShowRegister(false)} />;
                 {t.successMsg} <strong>Amadou M.</strong>
               </div>
               <div className="success-info">
-                <i className="ti ti-shield-check" /> {t.successInfo}
+                ✓ {t.successInfo}
               </div>
               <button className="btn-primary" onClick={onSuccess}>
                 {t.btnDashboard}

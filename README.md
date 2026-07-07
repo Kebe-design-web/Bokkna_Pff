@@ -23,8 +23,3 @@ L'application repose sur une architecture RESTful robuste pour garantir des perf
 
 ## 🛠️ Instructions pour le Déploiement Local
 
-### Étape 1 : Clonage et Configuration
-Ouvrez votre terminal et récupérez le projet :
-```bash
-git clone [LIEN_DU_DEPOT_GITHUB]
-cd backend
